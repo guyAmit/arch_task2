@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     print_input(order,epsilon,coeff,initial);
     printf("\n");
 
-    while(abstract_value(initial) >= epsilon){
+    while(abstract_value(initial) > epsilon){
         initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv_coeff(coeff,order),order-1,initial)));
     }
 
@@ -145,4 +145,5 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
 
 double abstract_value(complex_num * num){
     double result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
+    return result;
 }
