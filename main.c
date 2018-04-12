@@ -27,9 +27,16 @@ int main(int argc, char *argv[]) {
     complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
     fscanf(stdin, "%s%s%lf%lf", name,eq, &initial->real,&initial->imaginary);
 
+    printf("inputs:\n");
     print_input(order,epsilon,coeff,initial);
+    printf("\n");
 
+    while(abstract_value(initial) >= epsilon){
+        initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,initial),calc_f(deriv_coeff(coeff),initial)));
+    }
 
+    printf("root = ");
+    print_complex(initial);
 
     return 0;
 }
