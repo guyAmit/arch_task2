@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <tgmath.h>
+#include <math.h>
 #include "headers.h"
 
 int main(int argc, char *argv[]) {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     printf("\n");
 
     while(abstract_value(initial) >= epsilon){
-        initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv_coeff(coeff,order),order,initial)));
+        initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv_coeff(coeff,order),order-1,initial)));
     }
 
     printf("root = ");
@@ -141,4 +141,8 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
         free(temp);
     }
     return result;
+}
+
+double abstract_value(complex_num * num){
+    double result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
 }
