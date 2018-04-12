@@ -29,7 +29,11 @@ int main(int argc, char *argv[]) {
 
     print_input(order,epsilon,coeff,initial);
 
+
+
+    return 0;
 }
+
 
 void print_input(int order, double epsilon, complex_num** coeff, complex_num* initial){
     printf("order: %i\n",order);
