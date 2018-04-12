@@ -1,3 +1,0 @@
-/home/guy/Desktop/archi/assignment2/arch_task2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/guy/Desktop/archi/assignment2/arch_task2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/guy/Desktop/archi/assignment2/arch_task2/cmake-build-debug/CMakeFiles/arch_task2.dir
