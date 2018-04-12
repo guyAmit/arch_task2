@@ -69,3 +69,11 @@ complex_num* pow_copmplex( complex_num* num1, int n){
 
     return result;
 }
+
+complex_num* div_copmplex( complex_num* num1, complex_num* num2){
+    complex_num* result =(complex_num*) malloc(sizeof(complex_num));
+    result->real = ((num1->real*num2->real + num1->imaginary*num2->imaginary) / (num2->real*num2->real + num2->imaginary*num2->imaginary));
+    result->imaginary = ((num1->imaginary*num2->real - num1->real*num2->imaginary) / (num2->real*num2->real + num2->imaginary*num2->imaginary));
+
+    return result;
+}
