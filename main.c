@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <tgmath.h>
 #include "headers.h"
 
 int main(int argc, char *argv[]) {
@@ -57,4 +58,14 @@ void print_input(int order, double epsilon, complex_num** coeff, complex_num* in
 
 void print_complex(complex_num* num){
     printf("%lf %lf",num->real,num->imaginary);
+}
+
+complex_num* pow_copmplex( complex_num* num1, int n){
+    double r = sqrt(num1->real*num1->real + num1->imaginary*num1->imaginary);
+    double theta = atan(num1->imaginary / num1->real);
+    complex_num* result =(complex_num*) malloc(sizeof(complex_num));
+    result->real = pow(r,n)*cos(n*theta);
+    result->imaginary = pow(r,n)*sin(n*theta);
+
+    return result;
 }
