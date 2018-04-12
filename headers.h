@@ -14,3 +14,4 @@ complex_num* add_copmplex( complex_num* num1, complex_num* num2);
 
 complex_num* sub_copmplex( complex_num* num1, complex_num* num2);
 
+float abstract_value(complex_num * num);
