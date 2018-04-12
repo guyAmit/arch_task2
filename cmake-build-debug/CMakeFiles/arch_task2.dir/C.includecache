@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/guy/Desktop/archi/assignment2/arch_task2/headers.h
+
+/home/guy/Desktop/archi/assignment2/arch_task2/main.c
+stdlib.h
+-
+stdio.h
+-
+headers.h
+/home/guy/Desktop/archi/assignment2/arch_task2/headers.h
+math.h
+-
+
