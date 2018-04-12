@@ -16,7 +16,6 @@ int main(int argc, char *argv[]) {
     fscanf(stdin, "%s%s%i", name,eq, &order);
 
     complex_num** coeff =(complex_num**) malloc(sizeof(complex_num)*(order+1));
-
     int indx;
 
     for(int i=0;i<=order;i++) {
@@ -24,6 +23,7 @@ int main(int argc, char *argv[]) {
         fscanf(stdin, "%s%i%s%lf%lf", name,&indx,eq, &cn->real,&cn->imaginary);
         coeff[indx] = cn;
     }
+    complex_num** deriv = deriv_coeff(coeff,order);
 
     complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
     fscanf(stdin, "%s%s%lf%lf", name,eq, &initial->real,&initial->imaginary);
@@ -32,12 +32,14 @@ int main(int argc, char *argv[]) {
     print_input(order,epsilon,coeff,initial);
     printf("\n");
 
-    while(abstract_value(initial) > epsilon){
-        initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv_coeff(coeff,order),order-1,initial)));
+    while(abstract_value(calc_f(coeff,order,initial)) >= epsilon){
+        initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv,order-1,initial)));
+
     }
 
     printf("root = ");
     print_complex(initial);
+
 
     return 0;
 }
