@@ -25,30 +25,26 @@ int main(int argc, char *argv[]) {
     }
     complex_num** deriv = deriv_coeff(coeff,order);
 
-    complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
-    fscanf(stdin, "%s%s%e%e", name,eq, &initial->real,&initial->imaginary);
+    complex_num* new_initial =(complex_num*) malloc(sizeof(complex_num));
+    fscanf(stdin, "%s%s%e%e", name,eq, &new_initial->real,&new_initial->imaginary);
 
     printf("inputs:\n");
-    print_input(order,epsilon,coeff,initial);
+    print_input(order,epsilon,coeff,new_initial);
     printf("\n");
-
-
-    complex_num * f = calc_f(coeff,order,initial);
-    while(abstract_value(f) >= epsilon){
-        complex_num * initial_in_f =calc_f(coeff,order,initial);
-        complex_num * initial_in_deriv = calc_f(deriv,order-1,initial);
-        printf("\nf\n");
-        print_complex(initial_in_f);
-        printf("\nderiv:\n");
-        print_complex(initial_in_deriv);
-        initial = sub_copmplex(initial,div_copmplex(initial_in_f,initial_in_deriv));
-        printf("\n%lf %lf\n",initial->real,initial->imaginary);
-        free(f);
-        f = calc_f(coeff,order,initial);
-    }
+    int i =0;
+    complex_num * initial=(complex_num*)malloc(sizeof(complex_num*));
+    complex_num * div_result;
+    do{
+        complex_num * initial_in_f =calc_f(coeff,order,new_initial);
+        complex_num * initial_in_deriv = calc_f(deriv,order-1,new_initial);
+         div_result= div_copmplex(initial_in_f,initial_in_deriv);
+        initial->real=new_initial->real;
+        initial->imaginary=new_initial->imaginary;
+        cumulative_sub(new_initial,div_result);
+    }while(abstract_value(div_result) > epsilon*abstract_value(new_initial));
 
     printf("\nroot = ");
-    print_complex(initial);
+    print_complex(new_initial);
     printf("\n");
 
     return 0;
@@ -122,9 +118,17 @@ complex_num* add_copmplex( complex_num* num1, complex_num* num2){
     return result;
 }
 
-complex_num* sub_copmplex( complex_num* num1, complex_num* num2){
+
+complex_num* cumulative_sub( complex_num* num1, complex_num* num2){
     num1->real=num1->real-num2->real;
     num1->imaginary=num1->imaginary-num2->imaginary;
+    return num1;
+}
+
+complex_num* sub_copmplex( complex_num* num1, complex_num* num2){
+    complex_num * result = (complex_num*) malloc(sizeof(complex_num));
+    result->real=num1->real-num2->real;
+    result->imaginary=num1->imaginary-num2->imaginary;
     return num1;
 }
 
@@ -135,10 +139,9 @@ complex_num* cumulative_sum( complex_num* num1, complex_num* num2){
 }
 
 complex_num *cumulative_mul(complex_num* num1, complex_num* num2){
-    float tempReal=num1->real;
-    float  tempImg=num1->imaginary;
-    num1->real=(tempReal*num2->real - tempImg*num2->imaginary);
-    num1->imaginary=(tempReal*num2->imaginary+tempImg*num2->real);
+    double tempReal=num1->real;
+    num1->real=(tempReal*num2->real - num1->imaginary*num2->imaginary);
+    num1->imaginary=(tempReal*num2->imaginary+num1->imaginary*num2->real);
     return num1;
 }
 
@@ -149,7 +152,7 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
     result->imaginary=coeff[0]->imaginary;
     for (int i = 1; i <=order ; i++) {
         temp=pow_copmplex(initial,i);
-        temp=cumulative_mul(temp,coeff[i]);
+        cumulative_mul(temp,coeff[i]);
         cumulative_sum(result,temp);
         free(temp);
     }
