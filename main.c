@@ -135,7 +135,8 @@ complex_num *cumaltive_mul(complex_num* num1, complex_num* num2){
 complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
     complex_num * result = (complex_num*)malloc(sizeof(complex_num));
     complex_num * temp;
-    for (int i = 0; i <=order ; i++) {
+    result=coeff[0];
+    for (int i = 1; i <=order ; i++) {
         temp=pow_copmplex(initial,i);
         temp=cumaltive_mul(temp,coeff[i]);
         cumaltive_sum(result,temp);
@@ -145,6 +146,6 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
 }
 
 float abstract_value(complex_num * num){
-    float result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
+    double result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
     return result;
 }
