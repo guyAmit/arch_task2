@@ -9,9 +9,9 @@ int main(int argc, char *argv[]) {
     int order;
     char name[25];
     char eq[1];
-    double epsilon;
+    float epsilon;
 
-    fscanf(stdin, "%s%s%lf", name,eq, &epsilon);
+    fscanf(stdin, "%s%s%e", name,eq, &epsilon);
 
     fscanf(stdin, "%s%s%i", name,eq, &order);
 
@@ -20,13 +20,13 @@ int main(int argc, char *argv[]) {
 
     for(int i=0;i<=order;i++) {
         complex_num* cn =(complex_num*) malloc(sizeof(complex_num));
-        fscanf(stdin, "%s%i%s%lf%lf", name,&indx,eq, &cn->real,&cn->imaginary);
+        fscanf(stdin, "%s%i%s%e%e", name,&indx,eq, &cn->real,&cn->imaginary);
         coeff[indx] = cn;
     }
     complex_num** deriv = deriv_coeff(coeff,order);
 
     complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
-    fscanf(stdin, "%s%s%lf%lf", name,eq, &initial->real,&initial->imaginary);
+    fscanf(stdin, "%s%s%e%e", name,eq, &initial->real,&initial->imaginary);
 
     printf("inputs:\n");
     print_input(order,epsilon,coeff,initial);
@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
 
     while(abstract_value(calc_f(coeff,order,initial)) >= epsilon){
         initial = sub_copmplex(initial,div_copmplex(calc_f(coeff,order,initial),calc_f(deriv,order-1,initial)));
-
     }
 
     printf("root = ");
@@ -45,9 +44,9 @@ int main(int argc, char *argv[]) {
 }
 
 
-void print_input(int order, double epsilon, complex_num** coeff, complex_num* initial){
+void print_input(int order, float epsilon, complex_num** coeff, complex_num* initial){
     printf("order: %i\n",order);
-    printf("epsilon: %lf\n",epsilon);
+    printf("epsilon: %e\n",epsilon);
     for(int i=0;i<=order;i++){
         printf("coeff[%i]: ",i);
         print_complex(coeff[i]);
@@ -59,12 +58,12 @@ void print_input(int order, double epsilon, complex_num** coeff, complex_num* in
 }
 
 void print_complex(complex_num* num){
-    printf("%lf %lf",num->real,num->imaginary);
+    printf("%e %e",num->real,num->imaginary);
 }
 
 complex_num* pow_copmplex( complex_num* num1, int power){
-    double radius = pow(sqrt( pow(num1->imaginary,2) +pow(num1->real,2)),power);
-    double theta = power*atan(num1->imaginary/num1->real);
+    float radius = pow(sqrt( pow(num1->imaginary,2) +pow(num1->real,2)),power);
+    float theta = power*atan(num1->imaginary/num1->real);
     complex_num* result = (complex_num*)malloc(sizeof(complex_num));
     result->real=radius*cos(theta);
     result->imaginary=radius*sin(theta);
@@ -126,8 +125,8 @@ complex_num* cumaltive_sum( complex_num* num1, complex_num* num2){
 }
 
 complex_num *cumaltive_mul(complex_num* num1, complex_num* num2){
-    double tempReal=num1->real;
-    double  tempImg=num1->imaginary;
+    float tempReal=num1->real;
+    float  tempImg=num1->imaginary;
     num1->real=(tempReal*num2->real - tempImg*num2->imaginary);
     num1->imaginary=(tempReal*num2->imaginary+tempImg*num2->real);
     return num1;
@@ -145,7 +144,7 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
     return result;
 }
 
-double abstract_value(complex_num * num){
-    double result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
+float abstract_value(complex_num * num){
+    float result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
     return result;
 }

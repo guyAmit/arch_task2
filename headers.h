@@ -1,9 +1,9 @@
 typedef struct complex_num{
-    double real;
-    double imaginary;
+    float real;
+    float imaginary;
 }complex_num;
 
-void print_input(int order, double epsilon, complex_num** coeff, complex_num* initial);
+void print_input(int order, float epsilon, complex_num** coeff, complex_num* initial);
 void print_complex(complex_num* num);
 
 complex_num** deriv_coeff(complex_num** coeff, int order);
@@ -22,4 +22,4 @@ complex_num* cumaltive_sum( complex_num* num1, complex_num* num2);
 
 complex_num* cumaltive_mul( complex_num* num1, complex_num* num2);
 
-double abstract_value(complex_num * num);
+float abstract_value(complex_num * num);
