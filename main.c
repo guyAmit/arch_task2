@@ -31,20 +31,20 @@ int main(int argc, char *argv[]) {
     printf("inputs:\n");
     print_input(order,epsilon,coeff,new_initial);
     printf("\n");
-    int i =0;
     complex_num * initial=(complex_num*)malloc(sizeof(complex_num*));
     complex_num * div_result;
     do{
         complex_num * initial_in_f =calc_f(coeff,order,new_initial);
         complex_num * initial_in_deriv = calc_f(deriv,order-1,new_initial);
-         div_result= div_copmplex(initial_in_f,initial_in_deriv);
+        div_result= div_copmplex(initial_in_f,initial_in_deriv);
         initial->real=new_initial->real;
         initial->imaginary=new_initial->imaginary;
         cumulative_sub(new_initial,div_result);
-    }while(abstract_value(div_result) > epsilon*abstract_value(new_initial));
+    }while(abstract_value(sub_copmplex(new_initial,initial)) > epsilon);
 
     printf("\nroot = ");
     print_complex(new_initial);
+    printf("\n");
     printf("\n");
 
     return 0;
@@ -65,7 +65,7 @@ void print_input(int order, float epsilon, complex_num** coeff, complex_num* ini
 }
 
 void print_complex(complex_num* num){
-    printf("%e %e",num->real,num->imaginary);
+    printf("%lf %lf",num->real,num->imaginary);
 }
 
 complex_num* pow_copmplex( complex_num* num1, int power){
