@@ -32,25 +32,29 @@ int main(int argc, char *argv[]) {
     print_input(order,epsilon,coeff,initial);
     printf("\n");
     complex_num * div_result;
+    complex_num * initial_in_f =calc_f(coeff,order,initial);
     do{
-        complex_num * initial_in_f =calc_f(coeff,order,initial);
         complex_num * initial_in_deriv = calc_f(deriv,order-1,initial);
         div_result= div_copmplex(initial_in_f,initial_in_deriv);
         cumulative_sub(initial,div_result);
-    }while(abstract_value(calc_f(coeff,order,initial)) > epsilon);
+        free(div_result);
+        free(initial_in_deriv);
+        free(initial_in_f);
+        initial_in_f=calc_f(coeff,order,initial);
+    }while(abstract_value(initial_in_f) > epsilon);
 
     printf("\nf acctual: ");
-    print_complex(calc_f(coeff,order,initial));
+    print_complex(initial_in_f);
+    free(initial_in_f);
     printf("\n");
     printf("\nroot=: ");
     print_complex(initial);
     printf("\n");
-
     return 0;
 }
 
 
-void print_input(int order, float epsilon, complex_num** coeff, complex_num* initial){
+void print_input(int order, double epsilon, complex_num** coeff, complex_num* initial){
     printf("order: %i\n",order);
     printf("epsilon: %e\n",epsilon);
     for(int i=0;i<=order;i++){
