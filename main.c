@@ -31,17 +31,16 @@ int main(int argc, char *argv[]) {
     printf("inputs:\n");
     print_input(order,epsilon,coeff,new_initial);
     printf("\n");
-    complex_num * initial=(complex_num*)malloc(sizeof(complex_num*));
     complex_num * div_result;
     do{
         complex_num * initial_in_f =calc_f(coeff,order,new_initial);
         complex_num * initial_in_deriv = calc_f(deriv,order-1,new_initial);
         div_result= div_copmplex(initial_in_f,initial_in_deriv);
-        initial->real=new_initial->real;
-        initial->imaginary=new_initial->imaginary;
         cumulative_sub(new_initial,div_result);
-    }while(abstract_value(sub_copmplex(new_initial,initial)) > epsilon);
+    }while(abstract_value(calc_f(coeff,order,new_initial)) > epsilon);
 
+    printf("\nf acctual:");
+    print_complex(calc_f(coeff,order,new_initial));
     printf("\nroot = ");
     print_complex(new_initial);
     printf("\n");
@@ -65,15 +64,21 @@ void print_input(int order, float epsilon, complex_num** coeff, complex_num* ini
 }
 
 void print_complex(complex_num* num){
-    printf("%lf %lf",num->real,num->imaginary);
+    printf("%e %e",num->real,num->imaginary);
 }
 
 complex_num* pow_copmplex( complex_num* num1, int power){
-    float radius = pow(sqrt( pow(num1->imaginary,2) +pow(num1->real,2)),power);
+    float radius = pow(sqrt(pow(num1->imaginary,2) +pow(num1->real,2)),power);
     float theta = power*atan(num1->imaginary/num1->real);
     complex_num* result = (complex_num*)malloc(sizeof(complex_num));
-    result->real=radius*cos(theta);
-    result->imaginary=radius*sin(theta);
+    if(theta==0 && num1->real<0 ^ num1->imaginary<0) {
+        result->real = pow(num1->real,power);
+        result->imaginary = 0;
+    }
+    else{
+        result->real = radius * cos(theta);
+        result->imaginary = radius * sin(theta);
+    }
     return result;
 }
 
@@ -159,7 +164,7 @@ complex_num* calc_f(complex_num** coeff,int order, complex_num* initial){
     return result;
 }
 
-float abstract_value(complex_num * num){
+double abstract_value(complex_num * num){
     double result=sqrt(pow(num->real,2)+pow(num->imaginary,2));
     return result;
 }
