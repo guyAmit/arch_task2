@@ -25,25 +25,25 @@ int main(int argc, char *argv[]) {
     }
     complex_num** deriv = deriv_coeff(coeff,order);
 
-    complex_num* new_initial =(complex_num*) malloc(sizeof(complex_num));
-    fscanf(stdin, "%s%s%e%e", name,eq, &new_initial->real,&new_initial->imaginary);
+    complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
+    fscanf(stdin, "%s%s%e%e", name,eq, &initial->real,&initial->imaginary);
 
     printf("inputs:\n");
-    print_input(order,epsilon,coeff,new_initial);
+    print_input(order,epsilon,coeff,initial);
     printf("\n");
     complex_num * div_result;
     do{
-        complex_num * initial_in_f =calc_f(coeff,order,new_initial);
-        complex_num * initial_in_deriv = calc_f(deriv,order-1,new_initial);
+        complex_num * initial_in_f =calc_f(coeff,order,initial);
+        complex_num * initial_in_deriv = calc_f(deriv,order-1,initial);
         div_result= div_copmplex(initial_in_f,initial_in_deriv);
-        cumulative_sub(new_initial,div_result);
-    }while(abstract_value(calc_f(coeff,order,new_initial)) > epsilon);
+        cumulative_sub(initial,div_result);
+    }while(abstract_value(calc_f(coeff,order,initial)) > epsilon);
 
-    printf("\nf acctual:");
-    print_complex(calc_f(coeff,order,new_initial));
-    printf("\nroot = ");
-    print_complex(new_initial);
+    printf("\nf acctual: ");
+    print_complex(calc_f(coeff,order,initial));
     printf("\n");
+    printf("\nroot=: ");
+    print_complex(initial);
     printf("\n");
 
     return 0;
@@ -68,16 +68,11 @@ void print_complex(complex_num* num){
 }
 
 complex_num* pow_copmplex( complex_num* num1, int power){
-    float radius = pow(sqrt(pow(num1->imaginary,2) +pow(num1->real,2)),power);
-    float theta = power*atan(num1->imaginary/num1->real);
-    complex_num* result = (complex_num*)malloc(sizeof(complex_num));
-    if(theta==0 && num1->real<0 ^ num1->imaginary<0) {
-        result->real = pow(num1->real,power);
-        result->imaginary = 0;
-    }
-    else{
-        result->real = radius * cos(theta);
-        result->imaginary = radius * sin(theta);
+    complex_num * result =(complex_num*)malloc(sizeof(complex_num));
+    result->real=num1->real;
+    result->imaginary=num1->imaginary;
+    for (int i = 0; i < power-1 ; i++) {
+        cumulative_mul(result,num1);
     }
     return result;
 }
