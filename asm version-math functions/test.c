@@ -11,6 +11,7 @@ typedef struct complex_num{
 extern void cumulative_sum(complex_num*,complex_num*);
 extern void cumulative_mul(complex_num*,complex_num*);
 extern void cumulative_sub(complex_num*,complex_num*);
+extern void abstract_value(complex_num*, double*);
 
 int main(int argc, char const *argv[]) {
   complex_num * num1 =(complex_num*)malloc(sizeof(complex_num));
@@ -19,8 +20,9 @@ int main(int argc, char const *argv[]) {
   complex_num * num2 =(complex_num*)malloc(sizeof(complex_num));
   num2->real = 3.0;
   num2->img  = 4.0;
-  cumulative_sub(num1,num2);
-  printf("%lf %lf \n",num1->real,num1->img);
+  double res =1;
+  abstract_value(num1,&res);
+  printf("%lf \n",res);
   free(num1);
   free(num2);
   return 0;

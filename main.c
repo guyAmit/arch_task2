@@ -28,9 +28,9 @@ int main(int argc, char *argv[]) {
     complex_num* initial =(complex_num*) malloc(sizeof(complex_num));
     fscanf(stdin, "%s%s%lf%lf", name,eq, &initial->real,&initial->imaginary);
 
-    printf("inputs:\n");
-    print_input(order,epsilon,coeff,initial);
-    printf("\n");
+//    printf("inputs:\n");
+//    print_input(order,epsilon,coeff,initial);
+//    printf("\n");
     complex_num * div_result;
     complex_num * initial_in_f =calc_f(coeff,order,initial);
     do{
@@ -43,10 +43,10 @@ int main(int argc, char *argv[]) {
         initial_in_f=calc_f(coeff,order,initial);
     }while(abstract_value(initial_in_f) > epsilon);
 
-    printf("\nf acctual: ");
-    print_complex(initial_in_f);
+//    printf("\nf acctual: ");
+//    print_complex(initial_in_f);
     free(initial_in_f);
-    printf("\n");
+//    printf("\n");
     printf("\nroot=: ");
     print_complex(initial);
     printf("\n");
