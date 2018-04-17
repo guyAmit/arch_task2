@@ -3,9 +3,6 @@
 ;;; Programmer: guy amit, 2018
 
 
-%macro mul_cmplex_by_int 3
-
-%endmacro
 
 section .bss
 
@@ -39,7 +36,7 @@ deriv_coeff:
       fst qword[r8]
       fst qword[r8+8]
       xor r8,r8
-      mov rax,deriv_pointer_pointer
+      mov rax,qword[deriv_pointer_pointer]
       jmp end
 
     greter_than_or_equal_order_1:
@@ -53,60 +50,52 @@ deriv_coeff:
         mov [deriv_pointer_pointer],rax
         mov r8, qword[deriv_pointer_pointer]
         mov r9, qword[coeff_pointer_pointer]
-        mov r9, qword[r9+8]
-        fld qword[r9]
+        fld qword[r9+16]
         fst qword[r8]
-        fld qword[r9+8]
+        fld qword[r9+24]
         fst qword[r8+8]
-        mov rax, deriv_pointer_pointer
+        mov rax, qword[deriv_pointer_pointer]
+				xor r8,r8
         jmp end
-        xor r8,r8
 
       order_k:
         mov r8,qword[order]
         mov rax,r8
-        mov rbx,8
+        mov rbx,16
         mul rbx
         mov r8,rax
         mov rdi, rax
         call malloc
         mov [deriv_pointer_pointer],rax
-        mov r12,r8                        ;r12 is the place in the array of coeff
-        sub r8,8                          ;r8 is is the lat place in the array of deriv
-        loop_start:
-            mov r10,qword[coeff_pointer_pointer]      ;get pointer memory block of coeff
-            mov r11,qword[deriv_pointer_pointer]      ;get pointer memory block of deriv
+				mov r10, r8													;offset coeff array
+				sub r8, 16													;offset deriv array
+				mov r11,qword[coeff_pointer_pointer]
+				mov r9, qword[deriv_pointer_pointer]
+				loop_start:
 
-            mov rdi,16                                ;allocate new complex_num
-            call malloc
+						fld qword[r11+r10]
+						fild qword[order]
+						fmul
+						fst qword[r9+r8]
 
-            get_pointers:
-            mov r11,qword[r11+r8]                     ;get pointer to complex_num
-            mov r11,rax                               ;move pointer into direv_array
-            mov r10,qword[r10+r12]                    ;get pointer to complex_num in coeff
+						fld qword[r11+r10+8]
+						fild qword[order]
+						fmul
+						fst qword[r9+r8+8]
 
-            fld qword[r10]                            ;st(0)=num_real
-            fild qword[order]                                   ;st(0)=power
-            fmul                                      ;st(0)=num_real*power
-            fst qword[r11]                            ;store in real part of complex_number in deriv
+						sub r8,16
+						sub r10,16
+						mov r12,qword[order]
+						dec r12
+						mov [order], r12
 
-            fld qword[r10+8]                          ;same for img part
-            fild qword[order]
-            fmul
-            fst qword[r11+8]
+						cmp r12,0
+						je end_loop
+						jmp loop_start
 
-            sub r12, 8
-            sub r8, 8
-            mov r9, qword[order]
-            dec r9
-            mov [order],r9
-
-            cmp r9,0
-            je end_loop
-            jmp loop_start
-
-            end_loop:
-              mov rax,deriv_pointer_pointer
+						end_loop:
+						mov rax,qword[deriv_pointer_pointer]
+						jmp end
     end:
 
 
