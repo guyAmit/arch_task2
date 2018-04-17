@@ -81,19 +81,19 @@ eval_f:
 					fld qword[r9+8]
 					fst qword[r10+8]
 
-				mul_temp_with_inital_copy:
+				mul_temp_with_inital_copy:													;temp <--initial_copy *temp
 					mov rdi,qword[temp]
 					mov rsi,qword[initial_copy]
 					call cumulative_mul
 
-				sum_temp_into_result:
+				sum_temp_into_result:																;result<--result+temp
 					mov rdi,qword[result]
 		      mov rsi,qword[temp]
 		      call cumulative_sum
 
 				get_ready_for_next_round:
 				loop eval_loop
-				
+
 				end:
 				mov rax,qword[result]
 
