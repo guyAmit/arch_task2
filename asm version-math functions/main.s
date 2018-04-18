@@ -119,27 +119,26 @@ main:
 
 	lea rdi, [coeff]
 	lea rsi, [order]
+	mov rsi,[rsi]
+	L:
 	call deriv_coeff
 	mov rax, [deriv]  ; get the derived polynom
 
-	L:
 	mov r12, [order]
-	Lcoeff:          ; print coeff
+	dec r12
+	Lderiv:          ; print deriv
 	mov rax, r12
 	mov rbx, 16
 	mul rbx
-
 	lea rdi, [print_coeff]
 	mov rsi, r12
-	movsd xmm0, [coeff + rax]
-	movsd xmm1, [coeff + rax+8]
+	movsd xmm0, [deriv + rax]
+	movsd xmm1, [deriv + rax+8]
 	mov rax, 2
 	call printf
 	dec r12
 	cmp r12, -1
-	jnz Lcoeff
-
-
+	jnz Lderiv
 
 
 	end_of_program:
