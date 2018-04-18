@@ -8,9 +8,9 @@ ASM_FLAGS = -f elf64
 all: task0
 
 # link and build program
-task0: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o	pow_complex.o div_complex.o deriv_coeff.o
+task0: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o	pow_complex.o div_complex.o deriv_coeff.o eval_f.o
 	@echo 'Building target'
-	$(CC) -o task0 main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o pow_complex.o div_complex.o deriv_coeff.o
+	$(CC) -o task0 main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o pow_complex.o div_complex.o deriv_coeff.o eval_f.o
 	@echo 'Done'
 # compile each file
 cumulative_sum.o: cumulative_sum.s
@@ -33,6 +33,9 @@ div_complex.o: div_complex.s
 
 deriv_coeff.o: deriv_coeff.s
 		$(ASM) $(ASM_FLAGS)  deriv_coeff.s -o deriv_coeff.o
+
+eval_f.o: eval_f.s
+		$(ASM) $(ASM_FLAGS)  eval_f.s -o eval_f.o
 
 main.o: main.s
 	$(ASM) $(ASM_FLAGS) main.s -o main.o

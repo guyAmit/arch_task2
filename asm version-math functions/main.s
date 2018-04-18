@@ -12,14 +12,16 @@ extern eval_f
 global main
 
 section .bss
-epsilon:   resq 1
-order:     resq 1
-idx:			 resq 1
-real:			 resq 1
-imaginary: resq 1
-initial:   resq 2
-coeff:	   resq 1
-deriv:		 resq 1
+epsilon:   		resq 1
+order:     		resq 1
+idx:			 		resq 1
+real:			 		resq 1
+imaginary: 		resq 1
+initial:   		resq 2
+coeff:	   		resq 1
+deriv:		 		resq 1
+div_result:   resq 2
+initial_in_f: resq 2
 
 section .data
 	get_epsilon_order:
@@ -120,25 +122,46 @@ main:
 	lea rdi, [coeff]
 	lea rsi, [order]
 	mov rsi,[rsi]
-	L:
 	call deriv_coeff
-	mov rax, [deriv]  ; get the derived polynom
+	mov [deriv], rax  ; get f'(x)
+
+	; mov r12, [order]
+	; dec r12
+	; Lderiv:          ; print deriv
+	; mov rax, r12
+	; mov rbx, 16
+	; mul rbx
+	; lea rdi, [print_coeff]
+	; mov rsi, r12
+	; movsd xmm0, [deriv + rax]
+	; movsd xmm1, [deriv + rax+8]
+	; mov rax, 2
+	; call printf
+	; dec r12
+	; cmp r12, -1
+	; jnz Lderiv
+	L:
+	lea rdi, [coeff]
+	lea rsi, [order]
+	mov rsi, [rsi]
+	lea rdx, [initial]
+	call eval_f
+	mov [initial_in_f], rax  ; get f(initial)
 
 	mov r12, [order]
-	dec r12
-	Lderiv:          ; print deriv
+	Linitial_in_f:          ; print initial_in_f
 	mov rax, r12
 	mov rbx, 16
 	mul rbx
 	lea rdi, [print_coeff]
 	mov rsi, r12
-	movsd xmm0, [deriv + rax]
-	movsd xmm1, [deriv + rax+8]
+	movsd xmm0, [initial_in_f + rax]
+	movsd xmm1, [initial_in_f + rax+8]
 	mov rax, 2
 	call printf
 	dec r12
 	cmp r12, -1
-	jnz Lderiv
+	jnz Linitial_in_f
 
 
 	end_of_program:
