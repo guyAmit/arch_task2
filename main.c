@@ -6,6 +6,8 @@
 #include "headers.h"
 
 int main(int argc, char *argv[]) {
+
+    printf("%d",stdout);
     int order;
     char name[25];
     char eq[1];

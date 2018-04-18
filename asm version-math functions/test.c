@@ -44,3 +44,13 @@ int main(int argc, char const *argv[]) {
   free(result);
   return 0;
 }
+
+/*
+epsilon = 6.234564
+order = 3
+coeff 1 = 1 2
+coeff 2 = 3 4
+coeff 3 = 5 6
+coeff 0 = 7 8
+initial = 9 -10
+*/

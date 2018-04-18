@@ -5,13 +5,13 @@ ASM_FLAGS = -f elf64
 
 
 # All Targets
-all: test
+all: task0
 
 # link and build program
-test: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absulut_value.o	pow_complex.o div_complex.o deriv_coeff.o
+task0: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o	pow_complex.o div_complex.o deriv_coeff.o
 	@echo 'Building target'
-	$(CC) -o test main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absulut_value.o pow_complex.o div_complex.o deriv_coeff.o
-
+	$(CC) -o task0 main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o pow_complex.o div_complex.o deriv_coeff.o
+	@echo 'Done'
 # compile each file
 cumulative_sum.o: cumulative_sum.s
 	$(ASM) $(ASM_FLAGS)  cumulative_sum.s -o cumulative_sum.o
@@ -22,8 +22,8 @@ cumulative_mul.o: cumulative_mul.s
 cumulative_sub.o: cumulative_sub.s
 	$(ASM) $(ASM_FLAGS)  cumulative_sub.s -o cumulative_sub.o
 
-absulut_value.o: absulut_value.s
-		$(ASM) $(ASM_FLAGS)  absulut_value.s -o absulut_value.o
+absolute_value.o: absolute_value.s
+		$(ASM) $(ASM_FLAGS)  absolute_value.s -o absolute_value.o
 
 pow_complex.o: pow_complex.s
 		$(ASM) $(ASM_FLAGS)  pow_complex.s -o pow_complex.o
@@ -34,14 +34,13 @@ div_complex.o: div_complex.s
 deriv_coeff.o: deriv_coeff.s
 		$(ASM) $(ASM_FLAGS)  deriv_coeff.s -o deriv_coeff.o
 
+main.o: main.s
+	$(ASM) $(ASM_FLAGS) main.s -o main.o
 
-
-main.o: test.c
-	$(CC) -c test.c -o main.o -lm
 # Clean the build directory
 clean:
-	rm -f *.o test
+	rm -f *.o task0
 
 # Run program
 run:
-	./test
+	./task0
