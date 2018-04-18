@@ -30,18 +30,31 @@ int main(int argc, char const *argv[]) {
   coeff[4]=num3[0];
   coeff[5]=num3[1];
   double * init =(double*)malloc(sizeof(double)*2);
-  init[0] = 2.0;
+  init[0] = 1.5;
   init[1]  = 0.0;
 
-  double* result = eval_f(coeff,2,init);
+  double* deriv = deriv_coeff(coeff,2);
 
-  printf("%lf %lf \n",result[0], result[1]);
+  double* initial_in_f = eval_f(coeff,2,init);
+  double epsilon=1.0e-11;
+  do{
+    double * initial_in_deriv =eval_f(deriv,1,init);
+    double* div_result = div_complex(initial_in_f,initial_in_deriv);
+    cumulative_sub(init,div_result);
+    free(div_result);
+    free(initial_in_f);
+    free(initial_in_deriv);
+    initial_in_f=eval_f(coeff,2,init);
+  }while(absulut_value(initial_in_f)>epsilon);
 
+  printf("%.16e %.16e \n",init[0], init[1]);
   free(num1);
   free(num2);
   free(num3);
+  free(init);
   free(coeff);
-  free(result);
+  free(deriv);
+  free(initial_in_f);
   return 0;
 }
 
