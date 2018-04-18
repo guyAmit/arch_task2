@@ -13,44 +13,48 @@ extern double* eval_f(double*,int,double*);
 
 int main(int argc, char const *argv[]) {
 
-  double * num1 =(double*)malloc(sizeof(double)*2);
-  num1[0] = 1.0;
-  num1[1]  = 0.0;
-  double * num2 =(double*)malloc(sizeof(double)*2);
-  num2[0] = 2.0;
-  num2[1]  = 0.0;
-  double * num3 =(double*)malloc(sizeof(double)*2);
-  num3[0] = 1.0;
-  num3[1]  = 0.0;
-  double * coeff = (double*)malloc(sizeof(double)*6);
-  coeff[0]=num1[0];
-  coeff[1]=num1[1];
-  coeff[2]=num2[0];
-  coeff[3]=num2[1];
-  coeff[4]=num3[0];
-  coeff[5]=num3[1];
+
+  double * coeff = (double*)malloc(sizeof(double)*16);
+  coeff[0]=5040.0;
+  coeff[1]=0.0;
+  coeff[2]=13068.0;
+  coeff[3]=0;
+  coeff[4]=13132.0;
+  coeff[5]=0;
+  coeff[6]=6769.0;
+  coeff[7]=0.0;
+  coeff[8]=1960.0;
+  coeff[9]=0;
+  coeff[10]=322.0;
+  coeff[11]=0.0;
+  coeff[12]=28.0;
+  coeff[13]=0.0;
+  coeff[14]=1.0;
+  coeff[15]=0.0;
+
+
+
+
   double * init =(double*)malloc(sizeof(double)*2);
   init[0] = 1.5;
   init[1]  = 0.0;
 
-  double* deriv = deriv_coeff(coeff,2);
+  double* deriv = deriv_coeff(coeff,7);
 
-  double* initial_in_f = eval_f(coeff,2,init);
-  double epsilon=1.0e-11;
+ double* initial_in_f = eval_f(coeff,7,init);
+ double epsilon=1.0e-11;
   do{
-    double * initial_in_deriv =eval_f(deriv,1,init);
+    double * initial_in_deriv =eval_f(deriv,6,init);
     double* div_result = div_complex(initial_in_f,initial_in_deriv);
     cumulative_sub(init,div_result);
     free(div_result);
     free(initial_in_f);
     free(initial_in_deriv);
-    initial_in_f=eval_f(coeff,2,init);
+    initial_in_f=eval_f(coeff,7,init);
   }while(absulut_value(initial_in_f)>epsilon);
 
-  printf("%.16e %.16e \n",init[0], init[1]);
-  free(num1);
-  free(num2);
-  free(num3);
+  printf("%e %e \n",initial_in_f[0],initial_in_f[1]);
+
   free(init);
   free(coeff);
   free(deriv);

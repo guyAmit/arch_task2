@@ -76,31 +76,29 @@ deriv_coeff:
 				sub r8, 16													;offset deriv array
 				mov r11,qword[coeff_pointer_pointer]
 				mov r9, qword[deriv_pointer_pointer]
+				mov rcx, qword[order]
 				loop_start:
+
 
 						fld qword[r11+r10]
 						fild qword[order]
 						fmul
-						fst qword[r9+r8]
+						fstp qword[r9+r8]
 
 						fld qword[r11+r10+8]
 						fild qword[order]
 						fmul
-						fst qword[r9+r8+8]
+						fstp qword[r9+r8+8]
 
 						sub r8,16
 						sub r10,16
 						mov r12,qword[order]
 						dec r12
 						mov [order], r12
-
-						cmp r12,0
-						je end_loop
-						jmp loop_start
+						loop loop_start
 
 						end_loop:
 						mov rax,qword[deriv_pointer_pointer]
-						jmp end
     end:
 
 

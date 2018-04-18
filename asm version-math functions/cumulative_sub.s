@@ -17,12 +17,12 @@ cumulative_sub:
     fst st1			; copy st(0) into st(1)
     fld qword[rsi] ; load [num1 real] into the st(0)
     fsub			; st(0) -= st(1)
-    fst qword [rdi]	; store st(0) into [num1 real]
+    fstp qword [rdi]	; store st(0) into [num1 real]
   sub_img:
 		fld qword [rdi+8]	; load [num1 real] into st(0)
 		fst st1			; copy st(0) into st(1)
 		fld qword[rsi+8] ; load [num1 real] into the st(0)
 		fsub			; st(0) -= st(1)
-		fst qword [rdi+8]	; store st(0) into [num1 real]
+		fstp qword [rdi+8]	; store st(0) into [num1 real]
 	leave			; dump the top frame
 	ret			; return from main

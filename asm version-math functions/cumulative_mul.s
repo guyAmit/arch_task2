@@ -25,7 +25,7 @@ cumulative_mul:
     fst st1           ; copy [num2_img] into st(1)
     fld qword[rdi+8]  ; load [num1_img] into st(0)
     fmul              ;st(0)=num1_img*num2_img
-    fst qword [temp]	; store num1_real*num2_real into [temp]
+    fstp qword [temp]	; store num1_real*num2_real into [temp]
 
     fld qword [rsi]	; load [num2 real] into st(0)
     fst st1			      ; copy st(0) into st(1)
@@ -34,13 +34,13 @@ cumulative_mul:
     fst st1           ; copy st(0) into st(1)
     fld qword[temp]   ; load num1_real*num2_real into st(0)
     fsub              ;st(0) = num1_real*num2_real-num1_img*num2_img
-    fst qword[rdi]    ;move result back into the struct
+    fstp qword[rdi]    ;move result back into the struct
   mul_img:
     fld qword [rsi+8]	; load [num2_img] into st(0)
     fst st1			      ; copy st(0) into st(1)
     fld qword[temp_real] ; load [num1 real] into the st(0)
     fmul			        ; st(0) *= st(1)
-    fst qword [temp]	; store num1_real*num2_img into [temp]
+    fstp qword [temp]	; store num1_real*num2_img into [temp]
     fld qword[rsi]  ; load [num2_real] into st(0)
     fst st1           ; copy [num2_real] into st(1)
     fld qword[rdi+8]  ; load [num1_img] into st(0)
@@ -48,6 +48,7 @@ cumulative_mul:
     fst st1           ; copy st(0) into st(1)
     fld qword[temp]   ; load num1_real*num2_real into st(0)
     fadd              ;st(0) = num1_real*num2_img+num1_img*num2_real
-    fst qword[rdi+8]  ;move result back into the struct
+    fstp qword[rdi+8]  ;move result back into the struct
+
 	leave			          ; dump the top frame
 	ret			; return from main

@@ -10,8 +10,8 @@ result_pointer:
   resq 1
 num_pointer:
   resq 1
+
 section .data
-extern printf
 extern malloc
 extern cumulative_mul
 
@@ -29,21 +29,20 @@ pow_complex:
   call malloc
   mov [result_pointer],rax
   copy:
-  mov r9 , qword[num_pointer]
-  mov r8 , qword[result_pointer]
-  fld qword[r9]
-  fst qword [r8]
-  fld qword[r9+8]
-  fst qword[r8+8]
-  mov rcx,[power]
-  dec rcx
+    mov r9 , qword[num_pointer]
+    mov r8 , qword[result_pointer]
+    fld qword[r9]
+    fst qword [r8]
+    fld qword[r9+8]
+    fst qword[r8+8]
+    mov rcx,[power]
+    dec rcx
   loop_s:
-  mov rdi,r8
-  mov rsi,r9
-  call cumulative_mul
-  loop loop_s
-  xor r9,r9
-  xor r8,r8
+    mov rdi,r8
+    mov rsi,r9
+    call cumulative_mul
+    loop loop_s
+
   mov rax, [result_pointer]
 	leave			; dump the top frame
 	ret			; return from main

@@ -17,12 +17,12 @@ cumulative_sum:
     fst st1			; copy st(0) into st(1)
     fld qword[rdi] ; load [num1 real] into the st(0)
     fadd			; st(0) += st(1)
-    fst qword [rdi]	; store st(0) into [num1 real]
+    fstp qword [rdi]	; store st(0) into [num1 real]
   sum_img:
     fld qword[rsi+8] ; load [num2 img] into st(0)
     fst st1             ; copy [num2_img] into st(1)
     fld qword[rdi+8] ; load [num1_img] into st(0)
     fadd                ; st(0)+=st(1)
-    fst qword[rdi+8] ; store st(0) into [num1_img]
+    fstp qword[rdi+8] ; store st(0) into [num1_img]
 	leave			; dump the top frame
 	ret			; return from main
