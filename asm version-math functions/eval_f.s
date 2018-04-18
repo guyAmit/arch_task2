@@ -18,6 +18,7 @@ global eval_f
 extern malloc
 extern cumulative_mul
 extern cumulative_sum
+extern free
 
 section .text
 eval_f:
@@ -95,6 +96,10 @@ eval_f:
 				loop eval_loop
 
 				end:
+				mov rdi,qword[initial_copy]
+				call free
+				mov rdi,qword[temp]
+				call free
 				mov rax,qword[result]
 
 	leave			          ; dump the top frame
