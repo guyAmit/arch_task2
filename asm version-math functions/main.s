@@ -95,21 +95,21 @@ main:
 	; mov rax, 2
 	; call printf
 	;
-	; mov r12, [order]
-	; Lcoeff:          ; print coeff
-	; mov rax, r12
-	; mov rbx, 16
-	; mul rbx
-	;
-	; lea rdi, [print_coeff]
-	; mov rsi, r12
-	; movsd xmm0, [coeff + rax]
-	; movsd xmm1, [coeff + rax+8]
-	; mov rax, 2
-	; call printf
-	; dec r12
-	; cmp r12, -1
-	; jnz Lcoeff
+	mov r12, [order]
+	Lcoeff:          ; print coeff
+	mov rax, r12
+	mov rbx, 16
+	mul rbx
+
+	lea rdi, [print_coeff]
+	mov rsi, r12
+	movsd xmm0, [coeff + rax]
+	movsd xmm1, [coeff + rax+8]
+	mov rax, 2
+	call printf
+	dec r12
+	cmp r12, -1
+	jnz Lcoeff
 	;
 	; lea rdi, [print_initial]	; print initial
 	; movsd xmm0, [initial]
@@ -120,8 +120,7 @@ main:
 	the_algorithm:
 
 	lea rdi, [coeff]
-	lea rsi, [order]
-	mov rsi,[rsi]
+	mov rsi, [order]
 	call deriv_coeff
 	mov [deriv], rax  ; get f'(x)
 
@@ -140,28 +139,27 @@ main:
 	; dec r12
 	; cmp r12, -1
 	; jnz Lderiv
-	L:
+
 	lea rdi, [coeff]
-	lea rsi, [order]
-	mov rsi, [rsi]
+	mov rsi, [order]
 	lea rdx, [initial]
 	call eval_f
 	mov [initial_in_f], rax  ; get f(initial)
 
-	mov r12, [order]
-	Linitial_in_f:          ; print initial_in_f
-	mov rax, r12
-	mov rbx, 16
-	mul rbx
-	lea rdi, [print_coeff]
-	mov rsi, r12
-	movsd xmm0, [initial_in_f + rax]
-	movsd xmm1, [initial_in_f + rax+8]
-	mov rax, 2
-	call printf
-	dec r12
-	cmp r12, -1
-	jnz Linitial_in_f
+	; mov r12, [order]
+	; Linitial_in_f:          ; print initial_in_f
+	; mov rax, r12
+	; mov rbx, 16
+	; mul rbx
+	; lea rdi, [print_coeff]
+	; mov rsi, r12
+	; movsd xmm0, [initial_in_f + rax]
+	; movsd xmm1, [initial_in_f + rax+8]
+	; mov rax, 2
+	; call printf
+	; dec r12
+	; cmp r12, -1
+	; jnz Linitial_in_f
 
 
 	end_of_program:

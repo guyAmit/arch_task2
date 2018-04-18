@@ -11,8 +11,12 @@ order: resq 1
 deriv_pointer_pointer: resq 1
 
 section .data
+print_coeff:
+	db "coeff %d: %lf %lf", 10, 0
+
 global deriv_coeff
 extern malloc
+extern printf
 
 section .text
 deriv_coeff:
@@ -23,6 +27,7 @@ deriv_coeff:
   init_func:
     mov [coeff_pointer_pointer],rdi
     mov [order], rsi
+
     cmp qword[order],0
     je order_0
     jg greter_than_or_equal_order_1
