@@ -36,7 +36,8 @@ section .data
 		db "coeff %d: %lf %lf", 10, 0
 	print_initial:
 		db "initial: %lf %lf", 10, 0
-
+	print_result:
+			db "result: %lf %lf", 10, 0
 section .text
 main:
 	nop
@@ -71,11 +72,11 @@ main:
 		mov rax, [idx]
 	  mov rbx, 16
 		mul rbx
-		fld qword [imaginary]
 		fld qword [real]
-		fstp qword [coeff + rax]
-		add rax, 8
-		fstp qword [coeff + rax]
+		mov r11,qword[coeff]
+		fstp qword [r11+rax]
+		fld qword [imaginary]
+		fstp qword[r11+rax+8]
 		dec r12
 		cmp r12, 0
 		jnz scan_coeff
@@ -86,43 +87,38 @@ main:
 	mov rax, 2
 	call scanf
 
-	; print_input:
-	; nop
-	; lea rdi, [print_epsilon_order]	; print epsilon and order
-	; movsd xmm0, [epsilon]
-	; lea rsi, [order]
-	; mov rsi, [rsi]
-	; mov rax, 2
-	; call printf
-	;
-	mov r12, [order]
-	Lcoeff:          ; print coeff
-	mov rax, r12
-	mov rbx, 16
-	mul rbx
 
-	lea rdi, [print_coeff]
-	mov rsi, r12
-	movsd xmm0, [coeff + rax]
-	movsd xmm1, [coeff + rax+8]
-	mov rax, 2
-	call printf
-	dec r12
-	cmp r12, -1
-	jnz Lcoeff
-	;
-	; lea rdi, [print_initial]	; print initial
-	; movsd xmm0, [initial]
-	; movsd xmm1, [initial+8]
+
+	 ;lea rdi, [print_initial]	; print initial
+	 ;movsd xmm0, [initial]
+	 ;movsd xmm1, [initial+8]
 	; mov rax, 2
-	; call printf
+	 ;call printf
 
 	the_algorithm:
+	;mov rdi, coeff
+	;mov rsi, qword[order]
+	;call deriv_coeff
+	;mov [deriv], rax  ; get f'(x)
 
-	lea rdi, [coeff]
-	mov rsi, [order]
-	call deriv_coeff
-	mov [deriv], rax  ; get f'(x)
+	mov rdi, qword[coeff]
+	mov rsi, qword[order]
+	mov rdx, initial
+	call eval_f
+  mov [initial_in_f], rax  ; get f(initial)
+
+	print_f:
+	mov r9,qword[initial_in_f]
+	fld qword[r9]
+	fstp qword[initial]
+	fld qword[r9+8]
+	fstp qword[initial+8]
+	lea rdi, [print_result]	; print initial
+	movsd xmm0, [initial]
+	movsd xmm1, [initial+8]
+  mov rax, 2
+	call printf
+
 
 	; mov r12, [order]
 	; dec r12
@@ -140,11 +136,7 @@ main:
 	; cmp r12, -1
 	; jnz Lderiv
 
-	lea rdi, [coeff]
-	mov rsi, [order]
-	lea rdx, [initial]
-	call eval_f
-	mov [initial_in_f], rax  ; get f(initial)
+
 
 	; mov r12, [order]
 	; Linitial_in_f:          ; print initial_in_f
