@@ -109,13 +109,9 @@ main:
 
 	print_f:
 	mov r9,qword[initial_in_f]
-	fld qword[r9]
-	fstp qword[initial]
-	fld qword[r9+8]
-	fstp qword[initial+8]
 	lea rdi, [print_result]	; print initial
-	movsd xmm0, [initial]
-	movsd xmm1, [initial+8]
+	movsd xmm0, qword[r9]
+	movsd xmm1, qword[r9+8]
   mov rax, 2
 	call printf
 
