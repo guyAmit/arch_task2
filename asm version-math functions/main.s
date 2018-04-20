@@ -12,17 +12,19 @@ extern eval_f
 global main
 
 section .bss
-epsilon:   		resq 1
-order:     		resq 1
-idx:			 		resq 1
-real:			 		resq 1
-imaginary: 		resq 1
-initial:   		resq 2
-coeff:	   		resq 1
-deriv:		 		resq 1
-div_result:   resq 2
-initial_in_f: resq 2
-initial_in_deriv: resq 2
+epsilon:   				resq 1
+order:     				resq 1
+idx:			 				resq 1
+real:			 				resq 1
+imaginary: 				resq 1
+real0:			 			resq 1
+imaginary0: 			resq 1
+initial:   				resq 1
+coeff:	   				resq 1
+deriv:		 				resq 1
+div_result:   		resq 1
+initial_in_f: 		resq 1
+initial_in_deriv: resq 1
 
 section .data
 	get_epsilon_order:
@@ -82,36 +84,21 @@ main:
 		cmp r12, 0
 		jnz scan_coeff
 
+
+	mov rdi, 16
+	call malloc
+	mov [initial], rax
 	mov rdi, get_initial
-	mov rsi, initial
-	mov rdx, initial+8
+	mov rsi, real0
+	mov rdx, imaginary0
 	mov rax, 0
 	call scanf
+	mov rax, qword [initial]
+	fld qword [real0]
+	fstp qword [rax]
+	fld qword [imaginary0]
+	fstp qword[rax+8]
 
-
-
-	;  lea rdi, [print_initial]	; print initial
-	;  movsd xmm0, [initial]
-	;  movsd xmm1, [initial+8]
-	; mov rax, 2
-	;  call printf
-
-
-	; mov r12, [order]
-	; Lderiv:          ; print deriv
-	; mov rax, r12
-	; mov rbx, 16
-	; mul rbx
-	; lea rdi, [print_coeff]
-	; mov rsi, r12
-	; mov r9, qword[coeff]
-	; movsd xmm0, [r9 + rax]
-	; movsd xmm1, [r9 + rax+8]
-	; mov rax, 2
-	; call printf
-	; dec r12
-	; cmp r12, -1
-	; jnz Lderiv
 
 	the_algorithm:
 	mov rdi, qword[coeff]
@@ -125,14 +112,30 @@ main:
 	call eval_f
   mov [initial_in_f], rax  ; get f(initial)
 
-	mov rdi, qword[deriv]
-	mov rsi, qword[order]
+	mov rdi, qword [deriv]
+	mov rsi, qword [order]
 	mov rdx, initial
 	call eval_f
   mov [initial_in_deriv], rax  ; get f'(initial)
 
+	mov rdi, qword[initial_in_f]
+	mov rsi, qword[initial_in_deriv]
+	call div_complex
+  mov [div_result], rax  ; div_result =  f(initial) / f'(initial)
+
+
+	mov rdi, qword[initial]
+	mov rsi, qword[div_result]
+	call cumulative_sub    ; initial = initial - div_result
+
+	mov r9,qword[initial]
+	lea rdi, [print_result]	; print div_result
+	movsd xmm0, qword[r9]
+	movsd xmm1, qword[r9+8]
+  mov rax, 2
+	call printf
 	; print_f:
-	; mov r9,qword[initial_in_f]
+	; mov r9,qword[initial]
 	; lea rdi, [print_result]	; print initial
 	; movsd xmm0, qword[r9]
 	; movsd xmm1, qword[r9+8]
@@ -140,22 +143,21 @@ main:
 	; call printf
 
 
-
 	; mov r12, [order]
-	; Linitial_in_f:          ; print initial_in_f
+	; Lderiv:          ; print deriv
 	; mov rax, r12
 	; mov rbx, 16
 	; mul rbx
 	; lea rdi, [print_coeff]
 	; mov rsi, r12
-	; movsd xmm0, [initial_in_f + rax]
-	; movsd xmm1, [initial_in_f + rax+8]
+	; mov r9, qword[deriv]
+	; movsd xmm0, [r9 + rax]
+	; movsd xmm1, [r9 + rax+8]
 	; mov rax, 2
 	; call printf
 	; dec r12
 	; cmp r12, -1
-	; jnz Linitial_in_f
-
+	; jnz Lderiv
 
 	end_of_program:
 	xor rax, rax

@@ -2,8 +2,6 @@
 ;;;
 ;;; Programmer: guy amit, 2018
 
-
-
 section .bss
 
 coeff_pointer_pointer: resq 1
