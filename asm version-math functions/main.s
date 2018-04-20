@@ -98,26 +98,25 @@ main:
 
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
-	dec rsi
 	call deriv_coeff
 	mov [deriv], rax  ; get f'(x)
 
-	; mov r12, [order]
-	; dec r12
-	; Lderiv:          ; print deriv
-	; mov rax, r12
-	; mov rbx, 16
-	; mul rbx
-	; mov rdi, print_coeff
-	; mov rsi, r12
-	; mov r9, qword[deriv]
-	; movsd xmm0, [r9 + rax]
-	; movsd xmm1, [r9 + rax+8]
-	; mov rax, 2
-	; call printf
-	; dec r12
-	; cmp r12, -1
-	; jnz Lderiv
+	mov r12, [order]
+	dec r12
+	Lderiv:          ; print deriv
+	mov rax, r12
+	mov rbx, 16
+	mul rbx
+	mov rdi, print_coeff
+	mov rsi, r12
+	mov r9, qword[deriv]
+	movsd xmm0, [r9 + rax]
+	movsd xmm1, [r9 + rax+8]
+	mov rax, 2
+	call printf
+	dec r12
+	cmp r12, -1
+	jnz Lderiv
 
 	main_loop:
 	mov rdi, qword [coeff]
