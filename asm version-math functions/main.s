@@ -76,10 +76,10 @@ main:
 	  mov rbx, 16
 		mul rbx
 		fld qword [real]
-		mov r11,qword[coeff]
+		mov r11,qword [coeff]
 		fstp qword [r11+rax]
 		fld qword [imaginary]
-		fstp qword[r11+rax+8]
+		fstp qword [r11+rax+8]
 		dec r12
 		cmp r12, 0
 		jnz scan_coeff
@@ -97,41 +97,41 @@ main:
 	fld qword [real0]
 	fstp qword [rax]
 	fld qword [imaginary0]
-	fstp qword[rax+8]
+	fstp qword [rax+8]
 
 
 	the_algorithm:
-	mov rdi, qword[coeff]
-	mov rsi, qword[order]
+	mov rdi, qword [coeff]
+	mov rsi, qword [order]
 	call deriv_coeff
 	mov [deriv], rax  ; get f'(x)
 
-	mov rdi, qword[coeff]
-	mov rsi, qword[order]
-	mov rdx, initial
+	mov rdi, qword [coeff]
+	mov rsi, qword [order]
+	mov rdx, qword [initial]
 	call eval_f
   mov [initial_in_f], rax  ; get f(initial)
 
 	mov rdi, qword [deriv]
 	mov rsi, qword [order]
-	mov rdx, initial
+	mov rdx, qword [initial]
 	call eval_f
   mov [initial_in_deriv], rax  ; get f'(initial)
 
-	mov rdi, qword[initial_in_f]
-	mov rsi, qword[initial_in_deriv]
+	mov rdi, qword [initial_in_f]
+	mov rsi, qword [initial_in_deriv]
 	call div_complex
   mov [div_result], rax  ; div_result =  f(initial) / f'(initial)
 
 
-	mov rdi, qword[initial]
-	mov rsi, qword[div_result]
+	mov rdi, qword [initial]
+	mov rsi, qword [div_result]
 	call cumulative_sub    ; initial = initial - div_result
 
-	mov r9,qword[initial]
+	mov r9, qword [initial]
 	lea rdi, [print_result]	; print div_result
-	movsd xmm0, qword[r9]
-	movsd xmm1, qword[r9+8]
+	movsd xmm0, qword [r9]
+	movsd xmm1, qword [r9+8]
   mov rax, 2
 	call printf
 	; print_f:
