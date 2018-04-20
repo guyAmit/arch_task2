@@ -30,14 +30,8 @@ section .data
 		db 10,"coeff %d = %lf %lf",0
 	get_initial:
 		db 10,"initial = %lf %lf",0
-	print_epsilon_order:
-		db "epsilon: %.15e",10, "order: %d", 10, 0
-	print_coeff:
-		db "coeff %d: %lf %lf", 10, 0
 	print_root:
 		db "root = %.15e %.15e", 10, 0
-	f_in_root:
-			db "f in root: %.15e %.15e", 10, 0
 
 section .text
 main:
@@ -129,12 +123,12 @@ main:
 	mov rsi, qword [div_result]
 	call cumulative_sub    ; initial = initial - div_result
 
-	; mov rdi,qword[div_result]
-	; call free
-	; mov rdi,qword[initial_in_f]
-	; call free
-	; mov rdi,qword[initial_in_deriv]
-	; call free
+	mov rdi,qword[div_result]
+	call free
+	mov rdi,qword[initial_in_f]
+	call free
+	mov rdi,qword[initial_in_deriv]
+	call free
 
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
