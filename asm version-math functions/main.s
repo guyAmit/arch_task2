@@ -1,11 +1,9 @@
 extern printf
 extern scanf
 extern malloc
-extern cumulative_sum
-extern cumulative_mul
+extern free
 extern cumulative_sub
 extern absolute_value
-extern pow_complex
 extern div_complex
 extern deriv_coeff
 extern eval_f
@@ -17,14 +15,13 @@ order:     				resq 1
 idx:			 				resq 1
 real:			 				resq 1
 imaginary: 				resq 1
-real0:			 			resq 1
-imaginary0: 			resq 1
 initial:   				resq 1
 coeff:	   				resq 1
 deriv:		 				resq 1
 div_result:   		resq 1
 initial_in_f: 		resq 1
 initial_in_deriv: resq 1
+abs_value:				resq 1
 
 section .data
 	get_epsilon_order:
@@ -37,8 +34,8 @@ section .data
 		db "epsilon: %.15e",10, "order: %d", 10, 0
 	print_coeff:
 		db "coeff %d: %lf %lf", 10, 0
-	print_initial:
-		db "initial: %lf %lf", 10, 0
+	print_root:
+		db "root = %.15e %.15e", 10, 0
 	print_result:
 			db "result: %lf %lf", 10, 0
 section .text
@@ -89,23 +86,40 @@ main:
 	call malloc
 	mov [initial], rax
 	mov rdi, get_initial
-	mov rsi, real0
-	mov rdx, imaginary0
+	mov rsi, real
+	mov rdx, imaginary
 	mov rax, 0
 	call scanf
 	mov rax, qword [initial]
-	fld qword [real0]
+	fld qword [real]
 	fstp qword [rax]
-	fld qword [imaginary0]
+	fld qword [imaginary]
 	fstp qword [rax+8]
 
-
-	the_algorithm:
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
+	dec rsi
 	call deriv_coeff
 	mov [deriv], rax  ; get f'(x)
 
+	; mov r12, [order]
+	; dec r12
+	; Lderiv:          ; print deriv
+	; mov rax, r12
+	; mov rbx, 16
+	; mul rbx
+	; mov rdi, print_coeff
+	; mov rsi, r12
+	; mov r9, qword[deriv]
+	; movsd xmm0, [r9 + rax]
+	; movsd xmm1, [r9 + rax+8]
+	; mov rax, 2
+	; call printf
+	; dec r12
+	; cmp r12, -1
+	; jnz Lderiv
+
+	main_loop:
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
 	mov rdx, qword [initial]
@@ -118,22 +132,51 @@ main:
 	call eval_f
   mov [initial_in_deriv], rax  ; get f'(initial)
 
+	; mov r9, qword [initial_in_deriv]
+	; lea rdi, [print_result]	; print final answer
+	; movsd xmm0, qword [r9]
+	; movsd xmm1, qword [r9+8]
+	; mov rax, 2
+	; call printf
+
 	mov rdi, qword [initial_in_f]
 	mov rsi, qword [initial_in_deriv]
 	call div_complex
   mov [div_result], rax  ; div_result =  f(initial) / f'(initial)
 
-
 	mov rdi, qword [initial]
 	mov rsi, qword [div_result]
 	call cumulative_sub    ; initial = initial - div_result
 
+	mov rdi,qword[div_result]
+	call free
+	mov rdi,qword[initial_in_f]
+	call free
+	mov rdi,qword[initial_in_deriv]
+	call free
+
+	mov rdi, qword [coeff]
+	mov rsi, qword [order]
+	mov rdx, qword [initial]
+	call eval_f
+	mov [initial_in_f], rax  ; get f(initial) with new initial
+
+	mov rdi, qword [initial_in_f]
+	call absolute_value
+	fld qword [rax]
+	fcom qword [epsilon]
+	jle main_loop
+
+	mov rdi,qword[initial_in_f]
+	call free
+
 	mov r9, qword [initial]
-	lea rdi, [print_result]	; print div_result
+	lea rdi, [print_root]	; print final answer
 	movsd xmm0, qword [r9]
 	movsd xmm1, qword [r9+8]
   mov rax, 2
 	call printf
+
 	; print_f:
 	; mov r9,qword[initial]
 	; lea rdi, [print_result]	; print initial
