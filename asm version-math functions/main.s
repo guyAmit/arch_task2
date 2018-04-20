@@ -129,12 +129,12 @@ main:
 	mov rsi, qword [div_result]
 	call cumulative_sub    ; initial = initial - div_result
 
-	mov rdi,qword[div_result]
-	call free
-	mov rdi,qword[initial_in_f]
-	call free
-	mov rdi,qword[initial_in_deriv]
-	call free
+	; mov rdi,qword[div_result]
+	; call free
+	; mov rdi,qword[initial_in_f]
+	; call free
+	; mov rdi,qword[initial_in_deriv]
+	; call free
 
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
@@ -147,23 +147,13 @@ main:
 	call absolute_value
 	movsd [abs_value], xmm0
 
-
-	comper:
-	fld qword[epsilon]
+	fld qword[epsilon]   ; while(abs(initial_in_f) > epsilon) keep looping
 	fld qword[abs_value]
 	fcompp
 	fstsw ax
 	fwait
 	sahf
 	ja main_loop
-
-
-	mov r9, qword [initial_in_f]
-	lea rdi, [f_in_root]	; print final answer
-	movsd xmm0, qword [r9]
-	movsd xmm1, qword [r9+8]
-  mov rax, 2
-	call printf
 
 	mov r9, qword [initial]
 	lea rdi, [print_root]	; print final answer

@@ -5,12 +5,12 @@ ASM_FLAGS = -f elf64
 
 
 # All Targets
-all: task2
+all: root
 
 # link and build program
-task2: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o	pow_complex.o div_complex.o deriv_coeff.o eval_f.o
+root: main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o	pow_complex.o div_complex.o deriv_coeff.o eval_f.o
 	@echo 'Building target'
-	$(CC) -o task2 main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o pow_complex.o div_complex.o deriv_coeff.o eval_f.o
+	$(CC) -o root main.o cumulative_sum.o cumulative_mul.o cumulative_sub.o absolute_value.o pow_complex.o div_complex.o deriv_coeff.o eval_f.o
 	@echo 'Done'
 # compile each file
 cumulative_sum.o: cumulative_sum.s
@@ -42,8 +42,8 @@ main.o: main.s
 
 # Clean the build directory
 clean:
-	rm -f *.o task2
+	rm -f *.o root
 
 # Run program
 run:
-	./task2
+	./root
