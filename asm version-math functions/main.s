@@ -37,7 +37,7 @@ section .data
 	print_root:
 		db "root = %.15e %.15e", 10, 0
 	print_result:
-			db "result: %lf %lf", 10, 0
+			db "result: %lf", 10, 0
 section .text
 main:
 	nop
@@ -101,42 +101,22 @@ main:
 	call deriv_coeff
 	mov [deriv], rax  ; get f'(x)
 
-	mov r12, [order]
-	dec r12
-	Lderiv:          ; print deriv
-	mov rax, r12
-	mov rbx, 16
-	mul rbx
-	mov rdi, print_coeff
-	mov rsi, r12
-	mov r9, qword[deriv]
-	movsd xmm0, [r9 + rax]
-	movsd xmm1, [r9 + rax+8]
-	mov rax, 2
-	call printf
-	dec r12
-	cmp r12, -1
-	jnz Lderiv
 
-	main_loop:
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
 	mov rdx, qword [initial]
 	call eval_f
-  mov [initial_in_f], rax  ; get f(initial)
+	mov [initial_in_f], rax  ; get f(initial)
+
+
+	main_loop:
 
 	mov rdi, qword [deriv]
 	mov rsi, qword [order]
+	dec rsi
 	mov rdx, qword [initial]
 	call eval_f
   mov [initial_in_deriv], rax  ; get f'(initial)
-
-	; mov r9, qword [initial_in_deriv]
-	; lea rdi, [print_result]	; print final answer
-	; movsd xmm0, qword [r9]
-	; movsd xmm1, qword [r9+8]
-	; mov rax, 2
-	; call printf
 
 	mov rdi, qword [initial_in_f]
 	mov rsi, qword [initial_in_deriv]
@@ -160,11 +140,20 @@ main:
 	call eval_f
 	mov [initial_in_f], rax  ; get f(initial) with new initial
 
+	calc_abs_value:
 	mov rdi, qword [initial_in_f]
 	call absolute_value
-	fld qword [rax]
-	fcom qword [epsilon]
-	jle main_loop
+	movsd [abs_value], xmm0
+
+
+	comper:
+	fld qword[epsilon]
+	fld qword[abs_value]
+	fcompp
+	fstsw ax
+	fwait
+	sahf
+	Jz main_loop
 
 	mov rdi,qword[initial_in_f]
 	call free
@@ -176,30 +165,6 @@ main:
   mov rax, 2
 	call printf
 
-	; print_f:
-	; mov r9,qword[initial]
-	; lea rdi, [print_result]	; print initial
-	; movsd xmm0, qword[r9]
-	; movsd xmm1, qword[r9+8]
-  ; mov rax, 2
-	; call printf
-
-
-	; mov r12, [order]
-	; Lderiv:          ; print deriv
-	; mov rax, r12
-	; mov rbx, 16
-	; mul rbx
-	; lea rdi, [print_coeff]
-	; mov rsi, r12
-	; mov r9, qword[deriv]
-	; movsd xmm0, [r9 + rax]
-	; movsd xmm1, [r9 + rax+8]
-	; mov rax, 2
-	; call printf
-	; dec r12
-	; cmp r12, -1
-	; jnz Lderiv
 
 	end_of_program:
 	xor rax, rax
