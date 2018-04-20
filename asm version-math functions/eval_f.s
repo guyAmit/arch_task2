@@ -42,7 +42,7 @@ eval_f:
     jmp order_k
 
     order_0:
-      jmp end
+      jmp end_eval
 
     order_k:
       mov rdi, 16                               ;create copy of initial
@@ -93,7 +93,7 @@ eval_f:
 				get_ready_for_next_round:
 				loop eval_loop
 
-				end:
+				end_eval:
 				mov rdi,qword[initial_copy]
 				call free
 				mov rdi,qword[temp]

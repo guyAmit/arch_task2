@@ -32,6 +32,7 @@ section .data
 		db 10,"initial = %lf %lf",0
 	print_root:
 		db "root = %.15e %.15e", 10, 0
+	minus1: db -1
 
 section .text
 main:
@@ -91,6 +92,9 @@ main:
 	fld qword [imaginary]
 	fstp qword [rax+8]
 
+	cmp qword [order], 1
+	je if_order_1
+
 	mov rdi, qword [coeff]
 	mov rsi, qword [order]
 	call deriv_coeff
@@ -102,7 +106,6 @@ main:
 	mov rdx, qword [initial]
 	call eval_f
 	mov [initial_in_f], rax  ; get f(initial)
-
 
 	main_loop:
 
@@ -164,6 +167,51 @@ main:
 	call free
 	mov rdi,qword[deriv]
 	call free
+	jmp end_of_program
+
+
+	if_order_1:
+	nop
+		mov rax, [coeff]
+		mov r9, qword [initial]
+		fldz
+		fld qword [rax+16]
+		fsub
+		fstp qword [r9]
+
+		fldz
+		fld qword [rax+24]
+		fsub
+		fstp qword [r9+8]
+
+		mov r9, [coeff]
+		mov rdi, 16
+		call malloc
+		mov [deriv], rax
+		mov rax, qword [deriv]
+		fld qword [r9]
+		fstp qword [rax]
+		fld qword [r9+8]
+		fstp qword [rax+8]
+
+		mov rdi, qword [deriv]
+		mov rsi, qword [initial]
+		call div_complex
+	  mov [div_result], rax
+
+		mov r9, qword [div_result]
+		lea rdi, [print_root]	; print final answer
+		movsd xmm0, qword [r9]
+		movsd xmm1, qword [r9+8]
+	  mov rax, 2
+		call printf
+
+		mov rdi,qword[initial]
+		call free
+		mov rdi,qword[coeff]
+		call free
+		mov rdi,qword[deriv]
+		call free
 
 	end_of_program:
 	xor rax, rax
