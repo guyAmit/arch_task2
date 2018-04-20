@@ -36,8 +36,9 @@ section .data
 		db "coeff %d: %lf %lf", 10, 0
 	print_root:
 		db "root = %.15e %.15e", 10, 0
-	print_result:
-			db "result: %lf", 10, 0
+	f_in_root:
+			db "f in root: %.15e %.15e", 10, 0
+
 section .text
 main:
 	nop
@@ -123,6 +124,7 @@ main:
 	call div_complex
   mov [div_result], rax  ; div_result =  f(initial) / f'(initial)
 
+
 	mov rdi, qword [initial]
 	mov rsi, qword [div_result]
 	call cumulative_sub    ; initial = initial - div_result
@@ -153,10 +155,15 @@ main:
 	fstsw ax
 	fwait
 	sahf
-	Jz main_loop
+	ja main_loop
 
-	mov rdi,qword[initial_in_f]
-	call free
+
+	mov r9, qword [initial_in_f]
+	lea rdi, [f_in_root]	; print final answer
+	movsd xmm0, qword [r9]
+	movsd xmm1, qword [r9+8]
+  mov rax, 2
+	call printf
 
 	mov r9, qword [initial]
 	lea rdi, [print_root]	; print final answer
@@ -165,6 +172,14 @@ main:
   mov rax, 2
 	call printf
 
+	mov rdi,qword[initial_in_f]
+	call free
+	mov rdi,qword[initial]
+	call free
+	mov rdi,qword[coeff]
+	call free
+	mov rdi,qword[deriv]
+	call free
 
 	end_of_program:
 	xor rax, rax
