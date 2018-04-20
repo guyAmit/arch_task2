@@ -64,10 +64,15 @@ int main(int argc, char const *argv[]) {
 
 /*
 epsilon = 6.234564
-order = 3
+order = 8
+coeff 8 = 1 2
+coeff 7 = 1 2
+coeff 6 = 1 2
+coeff 5 = 1 2
+coeff 4 = 1 2
 coeff 1 = 1 2
 coeff 2 = 3 4
 coeff 3 = 5 6
 coeff 0 = 7 8
-initial = 9 -10
+initial = 1 1
 */

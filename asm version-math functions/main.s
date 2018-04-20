@@ -26,11 +26,11 @@ initial_in_deriv: resq 2
 
 section .data
 	get_epsilon_order:
-		db "epsilon = %lf",10,"order = %d\n",0
+		db "epsilon = %lf",10,"order = %d",0
 	get_coeff:
-		db 10,"coeff %d = %lf %lf\n",0
+		db 10,"coeff %d = %lf %lf",0
 	get_initial:
-		db 10,"initial = %lf %lf\n",0
+		db 10,"initial = %lf %lf",0
 	print_epsilon_order:
 		db "epsilon: %.15e",10, "order: %d", 10, 0
 	print_coeff:
@@ -90,11 +90,28 @@ main:
 
 
 
-	 ;lea rdi, [print_initial]	; print initial
-	 ;movsd xmm0, [initial]
-	 ;movsd xmm1, [initial+8]
+	;  lea rdi, [print_initial]	; print initial
+	;  movsd xmm0, [initial]
+	;  movsd xmm1, [initial+8]
 	; mov rax, 2
-	 ;call printf
+	;  call printf
+
+
+	; mov r12, [order]
+	; Lderiv:          ; print deriv
+	; mov rax, r12
+	; mov rbx, 16
+	; mul rbx
+	; lea rdi, [print_coeff]
+	; mov rsi, r12
+	; mov r9, qword[coeff]
+	; movsd xmm0, [r9 + rax]
+	; movsd xmm1, [r9 + rax+8]
+	; mov rax, 2
+	; call printf
+	; dec r12
+	; cmp r12, -1
+	; jnz Lderiv
 
 	the_algorithm:
 	mov rdi, qword[coeff]
@@ -121,23 +138,6 @@ main:
 	; movsd xmm1, qword[r9+8]
   ; mov rax, 2
 	; call printf
-
-
-	mov r12, [order]
-	dec r12
-	Lderiv:          ; print deriv
-	mov rax, r12
-	mov rbx, 16
-	mul rbx
-	lea rdi, [print_coeff]
-	mov rsi, r12
-	movsd xmm0, [deriv + rax]
-	movsd xmm1, [deriv + rax+8]
-	mov rax, 2
-	call printf
-	dec r12
-	cmp r12, -1
-	jnz Lderiv
 
 
 

@@ -28,6 +28,21 @@ deriv_coeff:
     mov [coeff_pointer_pointer],rdi
     mov [order], rsi
 
+		; mov r12, [order]
+		; Lderiv:          ; print deriv
+		; mov rax, r12
+		; mov rbx, 16
+		; mul rbx
+		; lea rdi, [print_coeff]
+		; mov rsi, r12
+		; movsd xmm0, [rdi + rax]
+		; movsd xmm1, [rdi + rax+8]
+		; mov rax, 2
+		; call printf
+		; dec r12
+		; cmp r12, -1
+		; jnz Lderiv
+
     cmp qword[order],0
     je order_0
     jg greter_than_or_equal_order_1
