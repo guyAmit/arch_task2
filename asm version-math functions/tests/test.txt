@@ -1,0 +1,6 @@
+epsilon = 1.0e-11
+order = 2
+coeff 0 = 1.0 0.0
+coeff 1 = 2.0 0.0
+coeff 2 = 1.0 0.0
+initial = 1.5 0.0
