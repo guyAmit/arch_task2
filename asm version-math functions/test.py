@@ -43,5 +43,5 @@ for i in range(0, 10):
     f = open("tests/result"+str(i)+".txt", "w+")
     f.write(ans[2]+" "+ans[3]+"\n")
     f.close()
-    print(eval_pol(i))
+    print(TestResults(i))
 
