@@ -15,6 +15,22 @@ def GanerateTest(i):
 
 
 
+def eval_pol(test,real,img):
+    #eval code
+    #code
+
+
+def TestResults(i):
+    f = open("tests/result"+str(i)+".txt","r")
+    resultLine = f.readline()
+    f.close()
+    f = open("tests/test")
+    ans = resultLine.split(" ")
+    result=eval_pol("tests/test"+str(i)+".txt",ans[2],ans[3])
+    if result<1.0e-10:
+        return True
+    return False
+
 for i in range(0, 10):
     GanerateTest(i)
 
@@ -24,4 +40,8 @@ for i in range(0, 10):
     (output, err) = process.communicate()
     exit_code = process.wait()
     ans = output.decode("utf-8").split(" ")
-    print("result for test {0} : {1} {2}".format(i,ans[2],ans[3]))
+    f = open("tests/result"+str(i)+".txt", "w+")
+    f.write(ans[2]+" "+ans[3]+"\n")
+    f.close()
+    print(eval_pol(i))
+
