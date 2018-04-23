@@ -2,13 +2,17 @@ from subprocess import Popen, PIPE
 from random import uniform
 from random import randint
 
+
+COEFFRANGE=100
+ORDER=100
+
 def GanerateTest(i):
     f = open("tests/test"+str(i)+".txt", "w+")
     f.write("epsilon = 1.0e-10\n")
-    order = randint(1, 100)
+    order = randint(1, ORDER)
     f.write("order = "+str(order)+"\n")
     for n in range(0,order+1):
-        f.write("coeff "+str(n)+" = "+str(uniform(-10, 10))+" "+str(uniform(-10, 10))+"\n")
+        f.write("coeff "+str(n)+" = "+str(uniform(-1*COEFFRANGE, COEFFRANGE))+" "+str(uniform(-1*COEFFRANGE, COEFFRANGE))+"\n")
     f.write("initial = "+str(uniform(-10, 10))+" "+str(uniform(-10, 10))+"\n")
     f.close()
 
@@ -16,33 +20,39 @@ def GanerateTest(i):
 
 
 def eval_pol(test,real,img):
-    resultReal = 0
-    resultImg = 0
-    realPower=1
-    imgPower=0
-    print(test)
+    real = float(real)
+    img = float(img)
+    realpower = 1             #temp power real
+    imgpower = 0              #temp power img
     f = open(test, "r")
     next(f)
     order = f.readline()
     order = int((order.split(" "))[2])
+
     coeff = f.readline()
     coeff = coeff.split(" ")
     resultReal = float(coeff[3])
     resultImg = float(coeff[4])
-    for i in range(1, order):
-        tempReal = realPower
-        realPower = (tempReal * real - realPower * img);
-        imgPower = (tempReal*img + imgPower*real);
+    for i in range(0, order):
+        #power = power * resultFromTest
+        tempReal = realpower
+        realpower = (tempReal * real - imgpower * img)
+        imgpower = (tempReal * img + imgpower*real)
+
         coeff = f.readline()
         coeff = coeff.split(" ")
-        coeffReal = float(coeff[2])
-        coeffImg = float(coeff[3])
+        coeffReal = float(coeff[3])
+        coeffImg = float(coeff[4])
         tempReal = coeffReal
-        coeffReal = (tempReal * realPower - coeffReal * imgPower)
-        coeffImg = (tempReal * imgPower - coeffImg * realPower)
-        resultReal += coeffReal
-        resultImg += coeffImg
-    return pow(pow(resultReal, 2)+pow(resultImg, 2), 0.5)
+        coeffReal = (tempReal * realpower - coeffImg * imgpower)
+        coeffImg = (tempReal * imgpower + coeffImg * realpower)
+
+        resultReal = resultReal + coeffReal
+        resultImg = resultImg + coeffImg
+
+    result = pow(pow(resultImg,2)+pow(resultReal,2),0.5)
+    return result
+
 
 
 
@@ -57,14 +67,15 @@ def TestResults(i,real,img):
     return False
 
 for i in range(0, 10):
-    GanerateTest(i)
+   GanerateTest(i)
 
 
-for i in range(1, 2):
-    process = Popen(["./root < tests/test"+str(0)+".txt"], stdout=PIPE, shell=True)
+for i in range(0, 10):
+    process = Popen(["./root < tests/test"+str(i)+".txt"], stdout=PIPE, shell=True)
     (output, err) = process.communicate()
     exit_code = process.wait()
     ans = output.decode("utf-8").split(" ")
-    result = TestResults(i, float(ans[2]), float(ans[3]))
-    print("test result num {0} is : {1}".format(i, result))
+    result = TestResults(i, ans[2], ans[3])
+    if not result:
+        print("test result num {0} is : {1}".format(i, "Failed"))
 
