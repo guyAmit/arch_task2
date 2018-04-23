@@ -4,7 +4,7 @@ from random import randint
 
 
 COEFFRANGE=100
-ORDER=100
+ORDER=150
 
 def GanerateTest(i):
     f = open("tests/test"+str(i)+".txt", "w+")
@@ -50,6 +50,7 @@ def eval_pol(test,real,img):
         resultReal = resultReal + coeffReal
         resultImg = resultImg + coeffImg
 
+    f.close()
     result = pow(pow(resultImg,2)+pow(resultReal,2),0.5)
     return result
 
@@ -62,7 +63,7 @@ def TestResults(i,real,img):
     f.write("your result {0} {1} ".format(real,img))
     f.close()
     result = eval_pol("tests/test"+str(i)+".txt",ans[2],ans[3])
-    if result < 1.0e-10:
+    if result <= 1.0e-10:
         return True
     return False
 
