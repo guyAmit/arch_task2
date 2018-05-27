@@ -12,7 +12,7 @@ the purpose of this project is to get fmilier with the x87-subsystem
 
 for running the asm calculator go to asm-version-math functions and use
 ```
-make run or for running with input:  ./root <input_file.sic
+make run or for running with input:  ./root <input_file.txt
 ```
 for running the c version
 ```
